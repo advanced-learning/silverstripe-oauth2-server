@@ -1,0 +1,21 @@
+<?php
+
+namespace AdvancedLearning\Oauth2Server\Models;
+
+
+use SilverStripe\ORM\DataObject;
+
+class Scope extends DataObject
+{
+    private static $table_name = 'OauthScope';
+
+    private static $db = [
+        'Name' => 'Varchar(100)',
+        'Description' => 'Varchar(255)'
+    ];
+
+    private static $summary_fields = [
+        'Name',
+        'Description'
+    ];
+}

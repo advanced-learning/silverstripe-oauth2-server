@@ -1,0 +1,20 @@
+AdvancedLearning\Oauth2Server\Models\Client:
+  webapp:
+    Name: 'My Web App'
+    Grants: 'password,client_credentials'
+    Secret: 'Thisisareallybadsecret'
+
+AdvancedLearning\Oauth2Server\Models\Scope:
+  members:
+    Name: 'members'
+    Description: 'Access to member data'
+  groups:
+    Name: 'groups'
+    Description: 'Access to security groups'
+
+SilverStripe\Security\Member:
+  member1:
+    FirstName: My
+    Surname: Test
+    Email: 'test@oauth.com'
+    SetPassword: 'password'
