@@ -13,7 +13,7 @@ use SilverStripe\Security\Member;
  * @property string $Identifier
  * @property string $Scopes
  * @property string $Name
- * @property string $Datetime
+ * @property string $ExpiryDatetime
  * @property bool   $Revoked
  */
 class AccessToken extends DataObject

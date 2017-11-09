@@ -11,6 +11,8 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use Robbie\Psr7\HttpRequestAdapter;
+use Robbie\Psr7\HttpResponseAdapter;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -26,13 +28,14 @@ class AuthoriseController extends Controller
      */
     public function index(): HTTPResponse
     {
-        $psrRequest = $this->toPSR7Request($this->getRequest());
+        $psrRequest = (new HttpRequestAdapter())->toPsr7($this->getRequest());
         $psrResponse = new Response();
 
         $authServer = $this->getAuthorisationServer();
 
         try {
-            return $this->toSSResponse($authServer->respondToAccessTokenRequest($psrRequest, $psrResponse));
+            return (new HttpResponseAdapter())
+                ->fromPsr7($authServer->respondToAccessTokenRequest($psrRequest, $psrResponse));
         } catch (Exception $e) {
             return new HTTPResponse($e->getMessage(), 500);
         }
@@ -73,47 +76,5 @@ class AuthoriseController extends Controller
         );
 
         return $server;
-    }
-
-    /**
-     * Converts a SilverStripe HTTPRequest object into a PSR7 compliant request object.
-     *
-     * @param HTTPRequest $request The HTTPRequest to convert.
-     *
-     * @return ServerRequest
-     */
-    protected function toPSR7Request(HTTPRequest $request): ServerRequest
-    {
-        $psrRequest = new ServerRequest($request->httpMethod(), $request->getURL());
-
-        // add headers
-        foreach ($request->getHeaders() as $header => $value) {
-            $psrRequest = $psrRequest->withHeader($header, $value);
-        }
-
-        $psrRequest = $psrRequest->withParsedBody(json_decode($request->getBody(), true));
-
-        return $psrRequest;
-    }
-
-    /**
-     * Converts a PSR7 Response object into a SilverStripe HTTPResponse object.
-     *
-     * @param Response $response THe PSR7 Response object to convert.
-     *
-     * @return HTTPResponse
-     */
-    protected function toSSResponse(Response $response): HTTPResponse
-    {
-        $ssResponse = $this->getResponse();
-
-        // add headers
-        foreach ($response->getHeaders() as $header => $value) {
-            $ssResponse->addHeader($header, $value[0]);
-        }
-
-        $ssResponse->setBody((string)$response->getBody());
-
-        return $ssResponse;
     }
 }

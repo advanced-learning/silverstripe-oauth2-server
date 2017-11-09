@@ -8,6 +8,7 @@ OAuth2 server for SilverStripe 4.
 
 * `silverstripe/framework` ^4.0
 * `league/oauth2-server`
+* `robbie/psr7-adapters`
 * `PHP >= 7.1`
 
 ## Installation

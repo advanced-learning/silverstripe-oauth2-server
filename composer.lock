@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e37806407ef8f00d9c3b9429229285ad",
-    "content-hash": "4d618b4a728cb977084f4f5f2eb96a4b",
+    "hash": "179d610cf82176ff39136036f48f7d3a",
+    "content-hash": "4bb524a2de9a98c9cba38602ec3a8cce",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1214,6 +1214,54 @@
                 "simple-cache"
             ],
             "time": "2017-01-02 13:31:39"
+        },
+        {
+            "name": "robbie/psr7-adapters",
+            "version": "dev-vendor",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/advanced-learning/psr7-adapters.git",
+                "reference": "b4f06ad98a8011a3533ab5af26758444475df772"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/advanced-learning/psr7-adapters/zipball/b4f06ad98a8011a3533ab5af26758444475df772",
+                "reference": "b4f06ad98a8011a3533ab5af26758444475df772",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^1.3",
+                "silverstripe/framework": "^4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "silverstripe-vendormodule",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Robbie\\Psr7\\": "src/",
+                    "Robbie\\Psr7\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Robbie Averill",
+                    "email": "robbie@silverstripe.com"
+                }
+            ],
+            "description": "PSR-7 compliant adapters for SilverStripe HTTP classes",
+            "support": {
+                "source": "https://github.com/advanced-learning/psr7-adapters/tree/vendor"
+            },
+            "time": "2017-11-09 21:51:40"
         },
         {
             "name": "silverstripe/assets",
@@ -3259,10 +3307,13 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "robbie/psr7-adapters": 20,
         "phpunit/phpunit": 0
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.1"
+    },
     "platform-dev": []
 }
