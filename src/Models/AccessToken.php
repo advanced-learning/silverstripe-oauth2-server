@@ -5,6 +5,17 @@ namespace AdvancedLearning\Oauth2Server\Models;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 
+/**
+ * Class AccessToken
+ *
+ * @package AdvancedLearning\Oauth2Server\Models
+ *
+ * @property string $Identifier
+ * @property string $Scopes
+ * @property string $Name
+ * @property string $Datetime
+ * @property bool   $Revoked
+ */
 class AccessToken extends DataObject
 {
     private static $table_name = 'OauthAccessToken';

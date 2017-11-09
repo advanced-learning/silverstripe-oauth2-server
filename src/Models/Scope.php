@@ -4,6 +4,14 @@ namespace AdvancedLearning\Oauth2Server\Models;
 
 use SilverStripe\ORM\DataObject;
 
+/**
+ * Class Scope
+ *
+ * @package AdvancedLearning\Oauth2Server\Models
+ *
+ * @property string $Name
+ * @property string $Description
+ */
 class Scope extends DataObject
 {
     private static $table_name = 'OauthScope';

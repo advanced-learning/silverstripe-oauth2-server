@@ -5,6 +5,15 @@ namespace AdvancedLearning\Oauth2Server\Models;
 use function base64_encode;
 use SilverStripe\ORM\DataObject;
 
+/**
+ * Stores Client information.
+ *
+ * @package AdvancedLearning\Oauth2Server\Models
+ *
+ * @property string $Grants
+ * @property string $Name
+ * @property string $Secret
+ */
 class Client extends DataObject
 {
     private static $table_name = 'OauthClient';
@@ -30,7 +39,7 @@ class Client extends DataObject
     {
         $grants = explode(',', $this->Grants);
 
-        return $grants && in_array($grantType, $grants);
+        return !empty($grants) && in_array($grantType, $grants);
     }
 
     /**

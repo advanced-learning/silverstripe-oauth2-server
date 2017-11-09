@@ -13,7 +13,7 @@ class User implements UserEntityInterface
     /**
      * Get the Member associated with this Client.
      *
-     * @return \SilverStripe\Security\Member
+     * @return Member
      */
     public function getMember()
     {
