@@ -8,14 +8,12 @@ use AdvancedLearning\Oauth2Server\Repositories\ScopeRepository;
 use DateInterval;
 use Exception;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use Robbie\Psr7\HttpRequestAdapter;
 use Robbie\Psr7\HttpResponseAdapter;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Environment;
 
