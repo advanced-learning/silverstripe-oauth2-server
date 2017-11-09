@@ -1,5 +1,5 @@
 {
-    "name": "advanced-learning/silverstripe-oauth-server",
+    "name": "advanced-learning/silverstripe-oauth2-server",
     "description": "SilverStripe module for an oauth2 server",
     "type": "silverstripe-vendormodule",
     "license": "MIT",
