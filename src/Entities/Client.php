@@ -2,7 +2,6 @@
 
 namespace AdvancedLearning\Oauth2Server\Entities;
 
-
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;

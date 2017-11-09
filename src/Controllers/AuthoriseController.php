@@ -2,7 +2,6 @@
 
 namespace AdvancedLearning\Oauth2Server\Controllers;
 
-
 use AdvancedLearning\Oauth2Server\Repositories\AccessTokenRepository;
 use AdvancedLearning\Oauth2Server\Repositories\ClientRepository;
 use AdvancedLearning\Oauth2Server\Repositories\ScopeRepository;

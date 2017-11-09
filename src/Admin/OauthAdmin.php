@@ -2,7 +2,6 @@
 
 namespace AdvancedLearning\Admin;
 
-
 use AdvancedLearning\Oauth2Server\Models\AccessToken;
 use AdvancedLearning\Oauth2Server\Models\Client;
 use AdvancedLearning\Oauth2Server\Models\Scope;

@@ -2,7 +2,6 @@
 
 namespace AdvancedLearning\Oauth2Server\Repositories;
 
-
 use AdvancedLearning\Oauth2Server\Entities\Client;
 use function hash_equals;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;

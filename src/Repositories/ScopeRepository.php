@@ -2,7 +2,6 @@
 
 namespace AdvancedLearning\Oauth2Server\Repositories;
 
-
 use AdvancedLearning\Oauth2Server\Models\Scope;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
@@ -10,7 +9,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 class ScopeRepository implements ScopeRepositoryInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getScopeEntityByIdentifier($identifier)
     {
@@ -20,7 +19,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function finalizeScopes(
         array $scopes,

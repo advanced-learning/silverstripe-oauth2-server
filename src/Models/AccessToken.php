@@ -2,7 +2,6 @@
 
 namespace AdvancedLearning\Oauth2Server\Models;
 
-
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 

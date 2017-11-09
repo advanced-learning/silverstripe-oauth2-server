@@ -2,7 +2,6 @@
 
 namespace AdvancedLearning\Oauth2Server\Models;
 
-
 use function base64_encode;
 use SilverStripe\ORM\DataObject;
 

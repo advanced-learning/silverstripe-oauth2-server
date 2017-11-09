@@ -2,7 +2,6 @@
 
 namespace AdvancedLearning\Oauth2Server\Repositories;
 
-
 use AdvancedLearning\Oauth2Server\Entities\AccessToken;
 use AdvancedLearning\Oauth2Server\Models\AccessToken as AccessTokenModel;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
