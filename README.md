@@ -19,3 +19,9 @@ Install with [Composer](https://getcomposer.org):
 composer require advanced-learning/silverstripe-oauth-server
 ```
 
+## Oauth Support
+
+Currently supports client and password grants. The client grant uses the endpoint '/oauth/authorizse'.
+Currently requires securing api endpoints manually. There is a middleware but this would affect all requests.
+The same logic could be used in conjunction with allowed_actions on the controller.
+
