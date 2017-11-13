@@ -8,12 +8,9 @@ env:
 before_script:
  - phpenv rehash
  - composer self-update
- - git clone git://github.com/silverstripe/silverstripe-travis-support.git ~/travis-support
- - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
- - cd ~/builds/ss
 
 script:
- - vendor/bin/phpunit --coverage-clover=coverage.xml silverstripe-oauth2-server/tests
+ - vendor/bin/phpunit --coverage-clover=coverage.xml ./tests
 
 after_success:
   - mv coverage.xml ~/build/$TRAVIS_REPO_SLUG
