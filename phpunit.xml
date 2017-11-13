@@ -20,16 +20,16 @@
         bootstrap="vendor/silverstripe/framework/tests/bootstrap.php"
         colors="true">
 
-    <!--printerClass="ScriptFUSION\PHPUnitImmediateExceptionPrinter\ImmediateExceptionPrinter"-->
     <testsuite name="Default">
         <directory>./tests</directory>
     </testsuite>
 
-    <groups>
-        <exclude>
-            <group>sanitychecks</group>
-        </exclude>
-    </groups>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+            <exclude />
+        </whitelist>
+    </filter>
     <php>
         <env name="DB" value="SQLITE" />
     </php>

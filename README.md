@@ -1,5 +1,6 @@
 # SilverStripe Oauth2 Server
 
+[![Build Status](https://travis-ci.org/advanced-learning/silverstripe-oauth2-server.svg?branch=master)](https://travis-ci.org/advanced-learning/silverstripe-oauth2-server)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/advanced-learning/silverstripe-oauth2-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/advanced-learning/silverstripe-oauth2-server/?branch=master)
 
 OAuth2 server for SilverStripe 4.
