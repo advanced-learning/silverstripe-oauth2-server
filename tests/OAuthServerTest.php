@@ -2,6 +2,8 @@
 
 namespace AdvancedLearning\Oauth2Server\Tests;
 
+use AdvancedLearning\Oauth2Server\Controllers\AuthoriseController;
+use AdvancedLearning\Oauth2Server\Entities\UserEntity;
 use AdvancedLearning\Oauth2Server\Middleware\ResourceServerMiddleware;
 use AdvancedLearning\Oauth2Server\Models\AccessToken;
 use AdvancedLearning\Oauth2Server\Models\Client;
@@ -16,13 +18,19 @@ use function file_put_contents;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use const PHP_EOL;
+use Robbie\Psr7\HttpRequestAdapter;
+use Robbie\Psr7\HttpResponseAdapter;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\CoreKernel;
+use SilverStripe\Core\Environment;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Tests\Startup\ErrorControlChainMiddlewareTest\BlankKernel;
 use SilverStripe\Dev\SapphireTest;
@@ -49,11 +57,13 @@ class OAuthServerTest extends SapphireTest
         $path = $this->getPrivateKeyPath();
         file_put_contents($path, file_get_contents(__DIR__ . '/' . self::$privateKeyFile));
         chmod($path, 0660);
+        Environment::setEnv('OAUTH_PRIVATE_KEY_PATH', $path);
 
         // copy public key
         $path = $this->getPublicKeyPath();
         file_put_contents($path, file_get_contents(__DIR__ . '/' . self::$publicKeyFile));
         chmod($path, 0660);
+        Environment::setEnv('OAUTH_PUBLIC_KEY_PATH', $path);
 
         Security::force_database_is_ready(true);
     }
@@ -143,6 +153,38 @@ class OAuthServerTest extends SapphireTest
         // should have an error response
         $this->assertNotNull($result);
         $this->assertEquals(401, $result->getStatusCode());
+    }
+
+    public function testAuthoriseController()
+    {
+        $controller = new AuthoriseController();
+
+        $client = $this->objFromFixture(Client::class, 'webapp');
+        $request = $this->getClientRequest($client);
+
+        /**
+         * @var HTTPResponse $response
+         */
+        $response = $controller->setRequest((new HttpRequestAdapter())->fromPsr7($request))
+            ->index();
+
+        $this->assertInstanceOf(HTTPResponse::class, $response, 'Should receive a response object');
+        $this->assertEquals(200, $response->getStatusCode(), 'Should receive a 200 response code');
+
+        // check for access token
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('token_type', $data, 'Response should have a token_type');
+        $this->assertArrayHasKey('expires_in', $data, 'Response should have expire time for token');
+        $this->assertArrayHasKey('access_token', $data, 'Response should have a token');
+        $this->assertEquals('Bearer', $data['token_type'], 'Token type should be Bearer');
+    }
+
+    public function testUserEntity()
+    {
+        $member = $this->objFromFixture(Member::class, 'member1');
+        $entity = new UserEntity($member);
+
+        $this->assertEquals($member->ID, $entity->getMember()->ID, 'User entity member should have been set');
     }
 
     /**
@@ -243,7 +285,26 @@ class OAuthServerTest extends SapphireTest
 
         $client = $this->objFromFixture(Client::class, 'webapp');
 
-        $request = (new ServerRequest(
+        $request = $this->getClientRequest($client);
+
+        $response = new Response();
+        return $server->respondToAccessTokenRequest($request, $response);
+    }
+
+    /**
+     * Get PSR7 request object to be used for a client grant.
+     *
+     * @param Client $client
+     *
+     * @return ServerRequest
+     */
+    protected function getClientRequest(Client $client)
+    {
+        // setup server vars
+        $_SERVER['SERVER_PORT'] = 80;
+        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+
+        return (new ServerRequest(
             'POST',
             '',
             ['Content-Type' => 'application/json']
@@ -253,8 +314,6 @@ class OAuthServerTest extends SapphireTest
             'client_secret' => $client->Secret,
             'scope' => 'members'
         ]);
-
-        $response = new Response();
-        return $server->respondToAccessTokenRequest($request, $response);
     }
+
 }
