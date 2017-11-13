@@ -6,10 +6,11 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 
 /**
- * Class AccessToken
+ * Class AccessTokenEntity
  *
  * @package AdvancedLearning\Oauth2Server\Models
  *
+ * @property int    $ID
  * @property string $Identifier
  * @property string $Scopes
  * @property string $Name
@@ -35,7 +36,7 @@ class AccessToken extends DataObject
     ];
 
     /**
-     * Get the Member associated with this AccessToken.
+     * Get the Member associated with this AccessTokenEntity.
      *
      * @return Member
      */

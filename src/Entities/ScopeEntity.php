@@ -5,12 +5,12 @@ namespace AdvancedLearning\Oauth2Server\Entities;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
-class Scope implements ScopeEntityInterface
+class ScopeEntity implements ScopeEntityInterface
 {
     use EntityTrait;
 
     /**
-     * Scope constructor.
+     * ScopeEntity constructor.
      *
      * @param string $name The name of the scope.
      */

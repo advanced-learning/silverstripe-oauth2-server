@@ -7,12 +7,12 @@ use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
-class AccessToken implements AccessTokenEntityInterface
+class AccessTokenEntity implements AccessTokenEntityInterface
 {
     use TokenEntityTrait, EntityTrait, AccessTokenTrait;
 
     /**
-     * AccessToken constructor.
+     * AccessTokenEntity constructor.
      *
      * @param null|string $userIdentifier The identifier of the user.
      * @param array       $scopes         The scopes to assign the user.

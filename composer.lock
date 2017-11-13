@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "179d610cf82176ff39136036f48f7d3a",
-    "content-hash": "4bb524a2de9a98c9cba38602ec3a8cce",
+    "hash": "63887208ac519f75ee702235ddf4ffea",
+    "content-hash": "c8f4941233d41ae58da71bccbf85226d",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1264,6 +1264,64 @@
             "time": "2017-11-09 21:51:40"
         },
         {
+            "name": "silverstripe/admin",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/silverstripe/silverstripe-admin.git",
+                "reference": "9f437d8cc1c33b4915ed0f6e00e9d4dd52ab4594"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/silverstripe/silverstripe-admin/zipball/9f437d8cc1c33b4915ed0f6e00e9d4dd52ab4594",
+                "reference": "9f437d8cc1c33b4915ed0f6e00e9d4dd52ab4594",
+                "shasum": ""
+            },
+            "require": {
+                "silverstripe/framework": "^4@dev",
+                "silverstripe/vendor-plugin": "^1.0",
+                "silverstripe/versioned": "^1@dev"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "silverstripe-vendormodule",
+            "extra": {
+                "expose": [
+                    "client/dist",
+                    "client/lang",
+                    "thirdparty"
+                ]
+            },
+            "autoload": {
+                "psr-4": {
+                    "SilverStripe\\Admin\\": "code/",
+                    "SilverStripe\\Admin\\Tests\\": "tests/php/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "SilverStripe",
+                    "homepage": "http://silverstripe.com"
+                },
+                {
+                    "name": "The SilverStripe Community",
+                    "homepage": "http://silverstripe.org"
+                }
+            ],
+            "description": "SilverStripe admin interface",
+            "homepage": "http://silverstripe.org",
+            "keywords": [
+                "admin",
+                "silverstripe"
+            ],
+            "time": "2017-11-07 12:52:40"
+        },
+        {
             "name": "silverstripe/assets",
             "version": "1.0.0",
             "source": {
@@ -1521,6 +1579,57 @@
             ],
             "description": "Allows vendor modules to expose directories to the webroot",
             "time": "2017-10-20 03:03:37"
+        },
+        {
+            "name": "silverstripe/versioned",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/silverstripe/silverstripe-versioned.git",
+                "reference": "ee516407c35527ef50bf26d67c0902424b2a08e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/silverstripe/silverstripe-versioned/zipball/ee516407c35527ef50bf26d67c0902424b2a08e2",
+                "reference": "ee516407c35527ef50bf26d67c0902424b2a08e2",
+                "shasum": ""
+            },
+            "require": {
+                "silverstripe/framework": "^4@dev",
+                "silverstripe/vendor-plugin": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7",
+                "silverstripe/admin": "^1"
+            },
+            "type": "silverstripe-vendormodule",
+            "autoload": {
+                "psr-4": {
+                    "SilverStripe\\Versioned\\": "src/",
+                    "SilverStripe\\Versioned\\Tests\\": "tests/php/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "SilverStripe",
+                    "homepage": "http://silverstripe.com"
+                },
+                {
+                    "name": "The SilverStripe Community",
+                    "homepage": "http://silverstripe.org"
+                }
+            ],
+            "description": "SilverStripe Versioned component",
+            "homepage": "http://silverstripe.org",
+            "keywords": [
+                "silverstripe",
+                "versioned"
+            ],
+            "time": "2017-11-02 03:30:43"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3254,6 +3363,57 @@
             "time": "2016-10-03 07:35:21"
         },
         {
+            "name": "silverstripe/sqlite3",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/silverstripe/silverstripe-sqlite3.git",
+                "reference": "acaaf95d22311ab3731179ed4da50f2087afe23d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/silverstripe/silverstripe-sqlite3/zipball/acaaf95d22311ab3731179ed4da50f2087afe23d",
+                "reference": "acaaf95d22311ab3731179ed4da50f2087afe23d",
+                "shasum": ""
+            },
+            "require": {
+                "silverstripe/framework": "~4.0",
+                "silverstripe/vendor-plugin": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "silverstripe-vendormodule",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SilverStripe\\SQLite\\": "code/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Sean Harvey",
+                    "email": "sean@silverstripe.com"
+                },
+                {
+                    "name": "Ingo Schommer",
+                    "email": "ingo@silverstripe.com"
+                }
+            ],
+            "description": "Adds SQLite3 support to SilverStripe",
+            "keywords": [
+                "database",
+                "silverstripe",
+                "sqlite3"
+            ],
+            "time": "2017-10-12 01:03:50"
+        },
+        {
             "name": "webmozart/assert",
             "version": "1.2.0",
             "source": {
@@ -3308,7 +3468,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "robbie/psr7-adapters": 20,
-        "phpunit/phpunit": 0
+        "phpunit/phpunit": 0,
+        "silverstripe/sqlite3": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

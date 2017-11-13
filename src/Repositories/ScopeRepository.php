@@ -14,7 +14,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     public function getScopeEntityByIdentifier($identifier)
     {
         if ($scope = Scope::get()->filter(['Name' => $identifier])->first()) {
-            return new \AdvancedLearning\Oauth2Server\Entities\Scope($identifier);
+            return new \AdvancedLearning\Oauth2Server\Entities\ScopeEntity($identifier);
         }
     }
 

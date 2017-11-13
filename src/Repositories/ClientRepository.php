@@ -2,7 +2,7 @@
 
 namespace AdvancedLearning\Oauth2Server\Repositories;
 
-use AdvancedLearning\Oauth2Server\Entities\Client;
+use AdvancedLearning\Oauth2Server\Entities\ClientEntity;
 use function hash_equals;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use const PHP_EOL;
@@ -23,6 +23,6 @@ class ClientRepository implements ClientRepositoryInterface
             $client = null;
         }
 
-        return $client && $client->hasGrantType($grantType) ? new Client($clientIdentifier, $client->Name, 'something') : null;
+        return $client && $client->hasGrantType($grantType) ? new ClientEntity($clientIdentifier, $client->Name, 'something') : null;
     }
 }

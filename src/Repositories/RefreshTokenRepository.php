@@ -2,29 +2,29 @@
 
 namespace AdvancedLearning\Oauth2Server\Repositories;
 
-use AdvancedLearning\Oauth2Server\Entities\AccessTokenEntity as AccessTokenEntity;
-use AdvancedLearning\Oauth2Server\Models\AccessToken;
-use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
-class AccessTokenRepository implements AccessTokenRepositoryInterface
+use AdvancedLearning\Oauth2Server\Entities\RefreshTokenEntity;
+use AdvancedLearning\Oauth2Server\Models\AccessToken;
+use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+
+class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
+    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
         $newToken = AccessToken::create();
 
-        $newToken->Identifier = $accessTokenEntity->getIdentifier();
-        $newToken->Name = $accessTokenEntity->getClient()->getName();
-        $newToken->ExpiryDateTime = $accessTokenEntity->getExpiryDateTime()->format('Y-m-d H:i');
+        $newToken->Identifier = $refreshTokenEntity->getIdentifier();
+        $newToken->Name = $refreshTokenEntity->getAccessToken()->getClient()->getName();
+        $newToken->ExpiryDateTime = $refreshTokenEntity->getExpiryDateTime()->format('Y-m-d H:i');
 
         // turn scopes into space separated string
         $newToken->Scopes = '';
         $separator = '';
-        foreach ($accessTokenEntity->getScopes() as $scope) {
+        foreach ($refreshTokenEntity->getAccessToken()->getScopes() as $scope) {
             $newToken->Scopes .= $separator . $scope->getIdentifier();
             $separator = ' ';
         }
@@ -37,15 +37,15 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
+    public function getNewRefreshToken()
     {
-        return new AccessTokenEntity($userIdentifier, $scopes);
+        return new RefreshTokenEntity();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function revokeAccessToken($tokenId)
+    public function revokeRefreshToken($tokenId)
     {
         if ($token = $this->findToken($tokenId)) {
             $token->Revoked = true;
@@ -56,7 +56,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function isAccessTokenRevoked($tokenId): bool
+    public function isRefreshTokenRevoked($tokenId)
     {
         $token = $this->findToken($tokenId);
 

@@ -6,7 +6,7 @@ use function base64_encode;
 use SilverStripe\ORM\DataObject;
 
 /**
- * Stores Client information.
+ * Stores ClientEntity information.
  *
  * @package AdvancedLearning\Oauth2Server\Models
  *
@@ -29,7 +29,7 @@ class Client extends DataObject
     ];
 
     /**
-     * Checks whether this Client has the given grant type.
+     * Checks whether this ClientEntity has the given grant type.
      *
      * @param string $grantType The grant type to check.
      *

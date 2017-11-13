@@ -14,7 +14,8 @@
         "league/oauth2-server": "^6.0",
         "silverstripe/vendor-plugin": "^1.0",
         "robbie/psr7-adapters": "dev-vendor",
-        "PHP": ">=7.1"
+        "PHP": ">=7.1",
+        "silverstripe/admin": "^1.0"
     },
     "repositories": [
         {
@@ -23,7 +24,8 @@
         }
     ],
     "require-dev": {
-        "phpunit/PHPUnit": "^5.7@stable"
+        "phpunit/PHPUnit": "^5.7@stable",
+        "silverstripe/sqlite3": "dev-master"
     },
     "autoload": {
         "psr-4": {

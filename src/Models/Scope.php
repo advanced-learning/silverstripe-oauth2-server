@@ -5,7 +5,7 @@ namespace AdvancedLearning\Oauth2Server\Models;
 use SilverStripe\ORM\DataObject;
 
 /**
- * Class Scope
+ * Class ScopeEntity
  *
  * @package AdvancedLearning\Oauth2Server\Models
  *

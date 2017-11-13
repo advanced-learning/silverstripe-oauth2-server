@@ -17,4 +17,4 @@ SilverStripe\Security\Member:
     FirstName: My
     Surname: Test
     Email: 'test@oauth.com'
-    SetPassword: 'password'
+    Password: 'password1'

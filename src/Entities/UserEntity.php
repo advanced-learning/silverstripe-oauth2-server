@@ -6,17 +6,24 @@ use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use SilverStripe\Security\Member;
 
-class User implements UserEntityInterface
+class UserEntity implements UserEntityInterface
 {
     use EntityTrait;
 
+    protected $member;
+
+    public function __construct(Member $member)
+    {
+        $this->member = $member;
+    }
+
     /**
-     * Get the Member associated with this Client.
+     * Get the Member associated with this ClientEntity.
      *
      * @return Member
      */
     public function getMember()
     {
-        return Member::get()->byID($this->getIdentifier());
+        return $this->member;
     }
 }

@@ -47,9 +47,9 @@ class AuthoriseController extends Controller
     protected function getAuthorisationServer(): AuthorizationServer
     {
         // Init our repositories
-        $clientRepository = new ClientRepository(); // instance of ClientRepositoryInterface
-        $scopeRepository = new ScopeRepository(); // instance of ScopeRepositoryInterface
-        $accessTokenRepository = new AccessTokenRepository(); // instance of AccessTokenRepositoryInterface
+        $clientRepository = new ClientRepository();
+        $scopeRepository = new ScopeRepository();
+        $accessTokenRepository = new AccessTokenRepository();
 
         // Path to public and private keys
         $privateKey = Environment::getEnv('OAUTH_PRIVATE_KEY_PATH');
