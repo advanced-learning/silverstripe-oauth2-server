@@ -165,7 +165,12 @@ class OAuthServerTest extends SapphireTest
         /**
          * @var HTTPResponse $response
          */
-        $response = $controller->setRequest((new HttpRequestAdapter())->fromPsr7($request))
+        $response = $controller->setRequest(
+            (new HttpRequestAdapter())
+                ->fromPsr7($request)
+                // controller expects a string
+                ->setBody(json_encode($request->getParsedBody()))
+        )
             ->index();
 
         $this->assertInstanceOf(HTTPResponse::class, $response, 'Should receive a response object');
