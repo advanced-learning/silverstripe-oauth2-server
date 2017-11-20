@@ -15,6 +15,7 @@ use SilverStripe\Security\Member;
  * @property string $Scopes
  * @property string $Name
  * @property string $ExpiryDateTime
+ * @property string $User
  * @property bool   $Revoked
  */
 class AccessToken extends DataObject
@@ -25,7 +26,7 @@ class AccessToken extends DataObject
         'Identifier' => 'Varchar(255)',
         'Scopes' => 'Text',
         'Name' => 'Varchar(255)',
-        'ExpireDateTime' => 'Datetime',
+        'ExpiryDateTime' => 'Datetime',
         'Revoked' => 'Boolean',
         'User' => 'Varchar(50)'
     ];
