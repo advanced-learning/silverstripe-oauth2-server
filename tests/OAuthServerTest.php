@@ -202,7 +202,7 @@ class OAuthServerTest extends SapphireTest
         // fake server port
         $_SERVER['SERVER_PORT'] = 443;
 
-        $member = (new \AdvancedLearning\Assessment\GraphQL\Authenticator())->authenticate($request);
+        $member = (new \AdvancedLearning\Oauth2Server\GraphQL\Authenticator())->authenticate($request);
 
         $this->assertEquals('My Web App', $member->FirstName, 'Member FirstName should be same as client name');
         $this->assertEquals(0, $member->ID, 'Member should not have and ID');
@@ -247,7 +247,7 @@ class OAuthServerTest extends SapphireTest
         // fake server port
         $_SERVER['SERVER_PORT'] = 443;
 
-        $authMember = (new \AdvancedLearning\Assessment\GraphQL\Authenticator())->authenticate($request);
+        $authMember = (new \AdvancedLearning\Oauth2Server\GraphQL\Authenticator())->authenticate($request);
 
         $this->assertEquals($member->ID, $authMember->ID, 'Member should exist in DB');
     }
