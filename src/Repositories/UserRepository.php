@@ -23,7 +23,6 @@ class UserRepository implements UserRepositoryInterface
         ClientEntityInterface $clientEntity
     ) {
         $member = Member::get()->filter(['Email' => $username])->first();
-
         /**
          * @var ValidationResult $result
          */

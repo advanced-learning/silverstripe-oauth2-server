@@ -4,12 +4,15 @@ namespace AdvancedLearning\Oauth2Server\Controllers;
 
 use AdvancedLearning\Oauth2Server\Repositories\AccessTokenRepository;
 use AdvancedLearning\Oauth2Server\Repositories\ClientRepository;
+use AdvancedLearning\Oauth2Server\Repositories\RefreshTokenRepository;
 use AdvancedLearning\Oauth2Server\Repositories\ScopeRepository;
+use AdvancedLearning\Oauth2Server\Repositories\UserRepository;
 use DateInterval;
 use Exception;
 use GuzzleHttp\Psr7\Response;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use Robbie\Psr7\HttpRequestAdapter;
 use Robbie\Psr7\HttpResponseAdapter;
 use SilverStripe\Control\Controller;
@@ -52,6 +55,8 @@ class AuthoriseController extends Controller
         $clientRepository = new ClientRepository();
         $scopeRepository = new ScopeRepository();
         $accessTokenRepository = new AccessTokenRepository();
+        $userRepository = new UserRepository();
+        $refreshRepository = new RefreshTokenRepository();
 
         // Path to public and private keys
         $privateKey = Environment::getEnv('OAUTH_PRIVATE_KEY_PATH');
@@ -73,6 +78,12 @@ class AuthoriseController extends Controller
         $server->enableGrantType(
             new ClientCredentialsGrant(),
             new DateInterval('PT1H') // access tokens will expire after 1 hour
+        );
+
+        // Enable password grant
+        $server->enableGrantType(
+            new PasswordGrant($userRepository, $refreshRepository),
+            new DateInterval('PT1H')
         );
 
         return $server;

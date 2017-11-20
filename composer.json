@@ -15,7 +15,8 @@
         "silverstripe/vendor-plugin": "^1.0",
         "robbie/psr7-adapters": "dev-vendor",
         "PHP": ">=7.1",
-        "silverstripe/admin": "^1.0"
+        "silverstripe/admin": "^1.0",
+        "silverstripe/graphql": "^1.0"
     },
     "repositories": [
         {

@@ -19,6 +19,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
         $newToken->Identifier = $accessTokenEntity->getIdentifier();
         $newToken->Name = $accessTokenEntity->getClient()->getName();
+        $newToken->User = $accessTokenEntity->getUserIdentifier();
         $newToken->ExpiryDateTime = $accessTokenEntity->getExpiryDateTime()->format('Y-m-d H:i');
 
         // turn scopes into space separated string

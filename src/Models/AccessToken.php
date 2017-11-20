@@ -26,7 +26,8 @@ class AccessToken extends DataObject
         'Scopes' => 'Text',
         'Name' => 'Varchar(255)',
         'ExpireDateTime' => 'Datetime',
-        'Revoked' => 'Boolean'
+        'Revoked' => 'Boolean',
+        'User' => 'Varchar(50)'
     ];
 
     private static $summary_fields = [
@@ -34,14 +35,4 @@ class AccessToken extends DataObject
         'ExpireDateTime',
         'Revoked'
     ];
-
-    /**
-     * Get the Member associated with this AccessTokenEntity.
-     *
-     * @return Member
-     */
-    public function getMember()
-    {
-        return Member::get()->byID($this->Identifier);
-    }
 }

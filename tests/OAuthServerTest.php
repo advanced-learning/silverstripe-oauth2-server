@@ -4,31 +4,23 @@ namespace AdvancedLearning\Oauth2Server\Tests;
 
 use AdvancedLearning\Oauth2Server\Controllers\AuthoriseController;
 use AdvancedLearning\Oauth2Server\Entities\UserEntity;
-use AdvancedLearning\Oauth2Server\Middleware\ResourceServerMiddleware;
-use AdvancedLearning\Oauth2Server\Models\AccessToken;
+use AdvancedLearning\Oauth2Server\Middleware\AuthenticationMiddleware;
 use AdvancedLearning\Oauth2Server\Models\Client;
 use AdvancedLearning\Oauth2Server\Repositories\AccessTokenRepository;
 use AdvancedLearning\Oauth2Server\Repositories\ClientRepository;
 use AdvancedLearning\Oauth2Server\Repositories\RefreshTokenRepository;
 use AdvancedLearning\Oauth2Server\Repositories\ScopeRepository;
 use AdvancedLearning\Oauth2Server\Repositories\UserRepository;
-use function base64_encode;
-use function file_get_contents;
-use function file_put_contents;
+use AdvancedLearning\Oauth2Server\Services\Authenticator;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
-use const PHP_EOL;
 use Robbie\Psr7\HttpRequestAdapter;
-use Robbie\Psr7\HttpResponseAdapter;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
@@ -36,6 +28,8 @@ use SilverStripe\Core\Tests\Startup\ErrorControlChainMiddlewareTest\BlankKernel;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use function file_get_contents;
+use function file_put_contents;
 use function sys_get_temp_dir;
 
 class OAuthServerTest extends SapphireTest
@@ -128,6 +122,9 @@ class OAuthServerTest extends SapphireTest
 
         $server = $this->getResourceServer();
 
+        // set the resource server on authenticator service
+        Injector::inst()->get(Authenticator::class)->setServer($server);
+
         $request = new HTTPRequest('GET', '/');
         $request->addHeader('authorization', 'Bearer ' . $token);
         // fake server port
@@ -137,7 +134,7 @@ class OAuthServerTest extends SapphireTest
         $app = new HTTPApplication(new BlankKernel(BASE_PATH));
         $app->getKernel()->setEnvironment(Kernel::LIVE);
 
-        $result = (new ResourceServerMiddleware($app, $server))->process($request, function(){
+        $result = (new AuthenticationMiddleware($app))->process($request, function () {
             return null;
         });
 
@@ -146,7 +143,7 @@ class OAuthServerTest extends SapphireTest
         // failed authentication
         $request->removeHeader('authorization');
 
-        $result = (new ResourceServerMiddleware($app, $server))->process($request, function(){
+        $result = (new AuthenticationMiddleware($app))->process($request, function () {
             return null;
         });
 
@@ -190,6 +187,69 @@ class OAuthServerTest extends SapphireTest
         $entity = new UserEntity($member);
 
         $this->assertEquals($member->ID, $entity->getMember()->ID, 'User entity member should have been set');
+    }
+
+    public function testGraphQLClient()
+    {
+        // generate token
+        $response = $this->generateClientAccessToken();
+        $data = json_decode((string)$response->getBody(), true);
+        $token = $data['access_token'];
+
+        // create request
+        $request = new HTTPRequest('GET', '/');
+        $request->addHeader('authorization', 'Bearer ' . $token);
+        // fake server port
+        $_SERVER['SERVER_PORT'] = 443;
+
+        $member = (new \AdvancedLearning\Assessment\GraphQL\Authenticator())->authenticate($request);
+
+        $this->assertEquals('My Web App', $member->FirstName, 'Member FirstName should be same as client name');
+        $this->assertEquals(0, $member->ID, 'Member should not have and ID');
+    }
+
+    public function testGraphQLMember()
+    {
+        $userRepository = new UserRepository();
+        $refreshRepository = new RefreshTokenRepository();
+
+        $server = $this->getAuthorisationServer();
+        $server->enableGrantType(
+            new PasswordGrant($userRepository, $refreshRepository),
+            new \DateInterval('PT1H')
+        );
+
+        $client = $this->objFromFixture(Client::class, 'webapp');
+        $member = $this->objFromFixture(Member::class, 'member1');
+
+        $request = (new ServerRequest(
+            'POST',
+            '',
+            ['Content-Type' => 'application/json']
+        ))->withParsedBody([
+            'grant_type' => 'password',
+            'client_id' => $client->ID,
+            'client_secret' => $client->Secret,
+            'scope' => 'members',
+            'username' => $member->Email,
+            'password' => 'password1'
+        ]);
+
+        $response = new Response();
+        $response = $server->respondToAccessTokenRequest($request, $response);
+
+        $data = json_decode((string)$response->getBody(), true);
+        $token = $data['access_token'];
+
+        // create request
+        $request = new HTTPRequest('GET', '/');
+        $request->addHeader('authorization', 'Bearer ' . $token);
+        // fake server port
+        $_SERVER['SERVER_PORT'] = 443;
+
+        $authMember = (new \AdvancedLearning\Assessment\GraphQL\Authenticator())->authenticate($request);
+
+        $this->assertEquals($member->ID, $authMember->ID, 'Member should exist in DB');
     }
 
     /**

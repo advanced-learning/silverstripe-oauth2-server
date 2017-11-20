@@ -15,6 +15,7 @@ class UserEntity implements UserEntityInterface
     public function __construct(Member $member)
     {
         $this->member = $member;
+        $this->setIdentifier($member->Email);
     }
 
     /**

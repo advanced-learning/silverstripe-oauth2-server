@@ -1,3 +1,7 @@
 SilverStripe\Control\Director:
   rules:
     'oauth2/authorise': 'AdvancedLearning\Oauth2Server\Controllers\AuthoriseController'
+
+Silverstripe\Core\Injector\Injector:
+  AdvancedLearning\Oauth2Server\Services\Authenticator:
+    class: AdvancedLearning\Oauth2Server\Services\AuthenticationService
