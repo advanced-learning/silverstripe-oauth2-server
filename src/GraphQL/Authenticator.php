@@ -1,6 +1,6 @@
 <?php
 
-namespace AdvancedLearning\Assessment\GraphQL;
+namespace AdvancedLearning\Oauth2Server\GraphQL;
 
 
 use AdvancedLearning\Oauth2Server\Exceptions\AuthenticationException;
