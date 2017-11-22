@@ -36,9 +36,9 @@ class Authenticator implements AuthenticatorInterface
                 return $member;
             }
 
-            throw new ValidationException('Could not find a valid client/user');
+            throw new ValidationException('Could not find a valid client/user', 403);
         } catch (AuthenticationException $exception) {
-            throw new ValidationException($exception->getMessage());
+            throw new ValidationException($exception->getMessage(), 403);
         }
     }
 
