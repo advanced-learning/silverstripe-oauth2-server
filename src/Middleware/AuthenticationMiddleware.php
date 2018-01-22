@@ -9,6 +9,8 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Application;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * Class ResourceServerMiddleware.
@@ -53,6 +55,11 @@ class AuthenticationMiddleware implements HTTPMiddleware
     {
         try {
             $request = $this->authenticator->authenticate($request);
+
+            // set the current user
+            if ($userID = $request->getHeader('oauth_user_id')) {
+                Security::setCurrentUser(Member::get()->byID($userID));
+            }
         } catch (AuthenticationException $exception) {
             return $exception->getResponse();
         }

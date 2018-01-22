@@ -15,7 +15,7 @@ class ClientRepository implements ClientRepositoryInterface
     public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
     {
         $client = \AdvancedLearning\Oauth2Server\Models\Client::get()->filter([
-           'ID' => $clientIdentifier
+           'Identifier' => $clientIdentifier
         ])->first();
 
 
