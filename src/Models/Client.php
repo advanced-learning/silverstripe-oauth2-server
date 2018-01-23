@@ -13,6 +13,7 @@ use SilverStripe\ORM\DataObject;
  * @property string $Grants
  * @property string $Name
  * @property string $Secret
+ * @property string $Identifier
  */
 class Client extends DataObject
 {
@@ -21,7 +22,8 @@ class Client extends DataObject
     private static $db = [
         'Name' => 'Varchar(100)',
         'Grants' => 'Varchar(255)',
-        'Secret' => 'Varchar(255)'
+        'Secret' => 'Varchar(255)',
+        'Identifier' => 'Varchar(255)'
     ];
 
     private static $summary_fields = [
@@ -51,6 +53,10 @@ class Client extends DataObject
 
         if (empty($this->Secret)) {
             $this->Secret = $this->generateSecret();
+        }
+
+        if (empty($this->Identifier)) {
+            $this->Identifier = $this->generateSecret();
         }
     }
 
