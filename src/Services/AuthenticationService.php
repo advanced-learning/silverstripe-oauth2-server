@@ -41,6 +41,13 @@ class AuthenticationService implements Authenticator
         $requestAdapter = new HttpRequestAdapter();
         $responseAdapter = new HttpResponseAdapter();
 
+        // missing vars (cli)
+        $this->addMissingServerVariables($requestAdapter);
+
+        // store session as it doesn't get converted
+        $session = $request->getSession();
+        $routeParams = $request->params();
+
         $server = $this->getServer();
         $psrRequest = $requestAdapter->toPsr7($request);
         $psrResponse = new Response();
@@ -66,6 +73,10 @@ class AuthenticationService implements Authenticator
             );
         }
         $request = $requestAdapter->fromPsr7($psrRequest);
+
+        // add session back
+        $request->setSession($session);
+        $request->setRouteParams($routeParams);
 
         // add the request attributes as custom auth headers
         foreach ($psrRequest->getAttributes() as $attribute => $value) {
@@ -116,5 +127,27 @@ class AuthenticationService implements Authenticator
             $accessTokenRepository,
             $publicKeyPath
         );
+    }
+
+    /**
+     * Cli is missing some $_SERVER variables.
+     *
+     * @param HttpRequestAdapter $adapter
+     */
+    protected function addMissingServerVariables(HttpRequestAdapter $adapter)
+    {
+        $vars = $adapter->getServerVars() ?: [];
+        $defaults = [
+            'SERVER_PORT' => 80,
+            'HTTP_HOST' => Environment::getEnv('SS_BASE_URL')
+        ];
+
+        foreach ($defaults as $key => $value) {
+            if (empty($vars[$key])) {
+                $vars[$key] = $value;
+            }
+        }
+
+        $adapter->setServerVars($vars);
     }
 }

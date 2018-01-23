@@ -9,6 +9,8 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Core\Application;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\Connect\DatabaseException;
+use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 
@@ -37,9 +39,8 @@ class AuthenticationMiddleware implements HTTPMiddleware
      *
      * @param Application    $application The SilverStripe Application.
      */
-    public function __construct(Application $application)
+    public function __construct()
     {
-        $this->application = $application;
         $this->authenticator = Injector::inst()->get(Authenticator::class);
     }
 
@@ -58,10 +59,14 @@ class AuthenticationMiddleware implements HTTPMiddleware
 
             // set the current user
             if ($userID = $request->getHeader('oauth_user_id')) {
+                echo 'here';
                 Security::setCurrentUser(Member::get()->byID($userID));
+                echo 'wtf';exit;
             }
         } catch (AuthenticationException $exception) {
-            return $exception->getResponse();
+            // for middleware do nothing
+        } catch (DatabaseException $exception) {
+            // db not ready, ignore
         }
 
         // Pass the request on to the next responder in the chain
