@@ -28,8 +28,7 @@ class AuthenticationService implements Authenticator
     }
 
     /**
-     * Authenticate the request. Returns modified request (probably not as SS doesn't support
-     * request attributes).
+     * Authenticate the request. Adds oauth fields as headers on the request.
      *
      * @param HTTPRequest $request The SilverStripe request object to be authenticated.
      *
@@ -43,10 +42,6 @@ class AuthenticationService implements Authenticator
 
         // missing vars (cli)
         $this->addMissingServerVariables($requestAdapter);
-
-        // store session as it doesn't get converted
-        $session = $request->getSession();
-        $routeParams = $request->params();
 
         $server = $this->getServer();
         $psrRequest = $requestAdapter->toPsr7($request);
@@ -72,12 +67,6 @@ class AuthenticationService implements Authenticator
                 )
             );
         }
-        $request = $requestAdapter->fromPsr7($psrRequest);
-
-        // add session back
-        $request->setSession($session);
-        $request->setRouteParams($routeParams);
-
         // add the request attributes as custom auth headers
         foreach ($psrRequest->getAttributes() as $attribute => $value) {
             $request->addHeader($attribute, $value);

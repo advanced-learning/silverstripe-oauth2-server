@@ -29,9 +29,16 @@ class AuthoriseController extends Controller
      */
     public function index(): HTTPResponse
     {
+        $body = json_decode($this->getRequest()->getBody(), true);
+
+        // if not json, fallback to standard post
+        if (!$body) {
+            $body = $this->getRequest()->postVars();
+        }
+
         // request needs parsed body
         $psrRequest = (new HttpRequestAdapter())->toPsr7($this->getRequest())
-            ->withParsedBody(json_decode($this->getRequest()->getBody(), true));
+            ->withParsedBody($body);
         $psrResponse = new Response();
 
         $authServer = $this->getAuthorisationServer();
