@@ -29,7 +29,11 @@ class Authenticator implements AuthenticatorInterface
                 // return a fake member for the client
             } else if ($clientId = $request->getHeader('oauth_client_id')) {
                 $member = new Member();
-                $client = Client::get()->byID($clientId);
+                $client = Client::get()->filter(['Identifier' => $clientId])->first();
+
+                if (!$client) {
+                    throw new ValidationException('Could not find a valid client/user', 403);
+                }
 
                 $member->FirstName = $client->Name;
 
