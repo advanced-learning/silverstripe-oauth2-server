@@ -2,7 +2,8 @@ AdvancedLearning\Oauth2Server\Models\Client:
   webapp:
     Name: 'My Web App'
     Grants: 'password,client_credentials'
-    Secret: 'Thisisareallybadsecret'
+    Secret: 'Thisisareallybadsecret',
+    Identifier: 'Thisisanidentifier'
 
 AdvancedLearning\Oauth2Server\Models\Scope:
   members:

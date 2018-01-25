@@ -228,7 +228,7 @@ class OAuthServerTest extends SapphireTest
             ['Content-Type' => 'application/json']
         ))->withParsedBody([
             'grant_type' => 'password',
-            'client_id' => $client->ID,
+            'client_id' => $client->Identifier,
             'client_secret' => $client->Secret,
             'scope' => 'members',
             'username' => $member->Email,
@@ -375,7 +375,7 @@ class OAuthServerTest extends SapphireTest
             ['Content-Type' => 'application/json']
         ))->withParsedBody([
             'grant_type' => 'client_credentials',
-            'client_id' => $client->ID,
+            'client_id' => $client->Identifier,
             'client_secret' => $client->Secret,
             'scope' => 'members'
         ]);
