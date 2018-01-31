@@ -59,9 +59,7 @@ class AuthenticationMiddleware implements HTTPMiddleware
 
             // set the current user
             if ($userID = $request->getHeader('oauth_user_id')) {
-                echo 'here';
                 Security::setCurrentUser(Member::get()->byID($userID));
-                echo 'wtf';exit;
             }
         } catch (AuthenticationException $exception) {
             // for middleware do nothing

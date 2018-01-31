@@ -2,6 +2,7 @@
 
 namespace AdvancedLearning\Oauth2Server\Tests;
 
+use AdvancedLearning\Oauth2Server\AuthorizationServer\DefaultGenerator;
 use AdvancedLearning\Oauth2Server\Controllers\AuthoriseController;
 use AdvancedLearning\Oauth2Server\Entities\UserEntity;
 use AdvancedLearning\Oauth2Server\Middleware\AuthenticationMiddleware;
@@ -96,7 +97,7 @@ class OAuthServerTest extends SapphireTest
             ['Content-Type' => 'application/json']
         ))->withParsedBody([
             'grant_type' => 'password',
-            'client_id' => $client->ID,
+            'client_id' => $client->Identifier,
             'client_secret' => $client->Secret,
             'scope' => 'members',
             'username' => $member->Email,
@@ -108,6 +109,7 @@ class OAuthServerTest extends SapphireTest
 
         $data = json_decode((string)$response->getBody(), true);
 
+        $this->assertNotEmpty($data, 'Should have received response data');
         $this->assertArrayHasKey('token_type', $data, 'Response should have a token_type');
         $this->assertArrayHasKey('expires_in', $data, 'Response should have expire time for token');
         $this->assertArrayHasKey('access_token', $data, 'Response should have a token');
@@ -139,22 +141,11 @@ class OAuthServerTest extends SapphireTest
         });
 
         $this->assertNull($result, 'Resource Server shouldn\'t modify the response');
-
-        // failed authentication
-        $request->removeHeader('authorization');
-
-        $result = (new AuthenticationMiddleware($app))->process($request, function () {
-            return null;
-        });
-
-        // should have an error response
-        $this->assertNotNull($result);
-        $this->assertEquals(401, $result->getStatusCode());
     }
 
     public function testAuthoriseController()
     {
-        $controller = new AuthoriseController();
+        $controller = new AuthoriseController(new DefaultGenerator());
 
         $client = $this->objFromFixture(Client::class, 'webapp');
         $request = $this->getClientRequest($client);
