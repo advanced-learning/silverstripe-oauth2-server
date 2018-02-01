@@ -39,15 +39,19 @@ class AuthoriseController extends Controller
     public function index(): HTTPResponse
     {
         $body = null;
+        $contentType = $this->getRequest()->getHeader('Content-Type');
 
-        if ($this->getRequest()->getHeader('Content-Type') === 'application/json') {
+        if ($contentType === 'application/json') {
             $body = json_decode($this->getRequest()->getBody(), true);
         } else {
             $body = $this->getRequest()->postVars();
         }
 
         if (empty($body)) {
-            return $this->jsonResponse(['error' => 'No parameters could be found in request body'], 500);
+            return $this->getErrorResponse(
+                'No parameters could be found in request body. Did you correctly set the Content-Type header?',
+                500
+            );
         }
 
         // request needs parsed body
