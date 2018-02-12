@@ -5,6 +5,7 @@ namespace AdvancedLearning\Oauth2Server\Tests;
 use AdvancedLearning\Oauth2Server\AuthorizationServer\DefaultGenerator;
 use AdvancedLearning\Oauth2Server\Controllers\AuthoriseController;
 use AdvancedLearning\Oauth2Server\Entities\UserEntity;
+use AdvancedLearning\Oauth2Server\Extensions\GroupExtension;
 use AdvancedLearning\Oauth2Server\Middleware\AuthenticationMiddleware;
 use AdvancedLearning\Oauth2Server\Models\Client;
 use AdvancedLearning\Oauth2Server\Repositories\AccessTokenRepository;
@@ -22,11 +23,13 @@ use Robbie\Psr7\HttpRequestAdapter;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Tests\Startup\ErrorControlChainMiddlewareTest\BlankKernel;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use function file_get_contents;
@@ -46,6 +49,9 @@ class OAuthServerTest extends SapphireTest
      */
     public function setUp()
     {
+        // add GroupExtension for scopes
+        Config::forClass(Group::class)->merge('extensions', [GroupExtension::class]);
+
         parent::setUp();
 
         // copy private key so we can set correct permissions, file gets removed when tests finish
@@ -114,6 +120,16 @@ class OAuthServerTest extends SapphireTest
         $this->assertArrayHasKey('expires_in', $data, 'Response should have expire time for token');
         $this->assertArrayHasKey('access_token', $data, 'Response should have a token');
         $this->assertEquals('Bearer', $data['token_type'], 'Token type should be Bearer');
+    }
+
+    public function testScopes()
+    {
+        $member = $this->objFromFixture(Member::class, 'member1');
+
+        $entity = new UserEntity($member);
+
+        $this->assertTrue($entity->hasScope('scope1'), 'Member should have scope1');
+        $this->assertFalse($entity->hasScope('scope2'), 'Member should not have scope2');
     }
 
     public function testMiddleware()

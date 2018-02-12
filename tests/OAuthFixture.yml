@@ -8,10 +8,19 @@ AdvancedLearning\Oauth2Server\Models\Client:
 AdvancedLearning\Oauth2Server\Models\Scope:
   members:
     Name: 'members'
-    Description: 'Access to member data'
-  groups:
-    Name: 'groups'
-    Description: 'Access to security groups'
+    Description: 'Scope for members'
+  scope1:
+    Name: 'scope1'
+    Description: 'First Scope'
+  scope2:
+    Name: 'scope2'
+    Description: 'Second Scope'
+
+SilverStripe\Security\Group:
+  group1:
+    Title: 'First Group'
+    Code: 'group1'
+    Scopes: =>AdvancedLearning\Oauth2Server\Models\Scope.scope1
 
 SilverStripe\Security\Member:
   member1:
@@ -19,3 +28,4 @@ SilverStripe\Security\Member:
     Surname: Test
     Email: 'test@oauth.com'
     Password: 'password1'
+    Groups: =>SilverStripe\Security\Group.group1

@@ -2,6 +2,7 @@
 
 namespace AdvancedLearning\Oauth2Server\Repositories;
 
+use AdvancedLearning\Oauth2Server\Entities\ScopeEntity;
 use AdvancedLearning\Oauth2Server\Models\Scope;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
@@ -14,7 +15,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     public function getScopeEntityByIdentifier($identifier)
     {
         if ($scope = Scope::get()->filter(['Name' => $identifier])->first()) {
-            return new \AdvancedLearning\Oauth2Server\Entities\ScopeEntity($identifier);
+            return new ScopeEntity($identifier);
         }
     }
 
@@ -27,6 +28,17 @@ class ScopeRepository implements ScopeRepositoryInterface
         ClientEntityInterface $clientEntity,
         $userIdentifier = null
     ) {
-        return $scopes;
+        // only check if we have a user, should a client have scopes?
+        if (empty($userIdentifier)) return $scopes;
+
+        $userEntity = (new UserRepository())->getUserEntityByIdentifier($userIdentifier);
+
+        $approvedScopes = [];
+        foreach ($scopes as $scope) {
+            if ($userEntity->hasScope($scope->getIdentifier())) {
+                $approvedScopes[] = $scope;
+            }
+        }
+        return $approvedScopes;
     }
 }
