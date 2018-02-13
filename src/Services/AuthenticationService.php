@@ -10,6 +10,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer;
 use Robbie\Psr7\HttpRequestAdapter;
 use Robbie\Psr7\HttpResponseAdapter;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Environment;
 
@@ -110,6 +111,9 @@ class AuthenticationService implements Authenticator
 
         // Path to authorization server's public key
         $publicKeyPath = Environment::getEnv('OAUTH_PUBLIC_KEY_PATH');
+
+        // Relative paths to the web root
+        $publicKeyPath = str_replace('{BASE_DIR}', Director::baseFolder(), $publicKeyPath);
 
         // Setup the authorization server
         return new ResourceServer(
