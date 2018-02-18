@@ -24,7 +24,7 @@ class GroupExtension extends DataExtension
         $fields->addFieldToTab('Root.Oauth', GridField::create(
             'Scopes',
             'Scopes',
-            $this->Scopes(),
+            $this->owner->Scopes(),
             GridFieldConfig_RelationEditor::create()
         ));
     }
