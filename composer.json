@@ -13,20 +13,13 @@
         "silverstripe/framework": "^4.0",
         "league/oauth2-server": "^6.0",
         "silverstripe/vendor-plugin": "^1.0",
-        "robbie/psr7-adapters": "dev-vendor",
+        "robbie/psr7-adapters": "1.1.x-dev",
         "PHP": ">=7.1",
         "silverstripe/admin": "^1.0",
         "silverstripe/graphql": "^1.0"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/advanced-learning/psr7-adapters"
-        }
-    ],
     "require-dev": {
-        "phpunit/PHPUnit": "^5.7@stable",
-        "silverstripe/sqlite3": "dev-master"
+        "phpunit/PHPUnit": "^5.7@stable"
     },
     "autoload": {
         "psr-4": {
