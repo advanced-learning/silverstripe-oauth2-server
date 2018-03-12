@@ -19,7 +19,8 @@
         "silverstripe/graphql": "^1.0"
     },
     "require-dev": {
-        "phpunit/PHPUnit": "^5.7@stable"
+        "phpunit/PHPUnit": "^5.7@stable",
+        "silverstripe/sqlite3": "^2.1"
     },
     "autoload": {
         "psr-4": {
