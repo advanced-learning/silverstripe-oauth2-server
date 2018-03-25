@@ -14,11 +14,14 @@ use AdvancedLearning\Oauth2Server\Repositories\RefreshTokenRepository;
 use AdvancedLearning\Oauth2Server\Repositories\ScopeRepository;
 use AdvancedLearning\Oauth2Server\Repositories\UserRepository;
 use AdvancedLearning\Oauth2Server\Services\Authenticator;
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
+use Lcobucci\JWT\Claim\Factory as ClaimFactory;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Parsing\Encoder;
+use GuzzleHttp\Psr7\Response;
 use Robbie\Psr7\HttpRequestAdapter;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
@@ -247,6 +250,12 @@ class OAuthServerTest extends SapphireTest
 
         $data = json_decode((string)$response->getBody(), true);
         $token = $data['access_token'];
+
+        // check for fn/ln
+        $decoded = (new Parser())->parse($token);
+
+        $this->assertEquals('My', $decoded->getClaim('fn'), 'First name should be correctly set');
+        $this->assertEquals('Test', $decoded->getClaim('ln'), 'Last name should be correctly set');
 
         // create request
         $request = new HTTPRequest('GET', '/');
