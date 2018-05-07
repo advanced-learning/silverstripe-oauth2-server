@@ -4,6 +4,7 @@ namespace AdvancedLearning\Oauth2Server\Middleware;
 
 use AdvancedLearning\Oauth2Server\Exceptions\AuthenticationException;
 use AdvancedLearning\Oauth2Server\Services\Authenticator;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
@@ -54,6 +55,11 @@ class AuthenticationMiddleware implements HTTPMiddleware
      */
     public function process(HTTPRequest $request, callable $next)
     {
+        // don't authenticate if being run from command line
+        if (Director::is_cli()) {
+            return $next($request);
+        }
+
         try {
             $request = $this->authenticator->authenticate($request);
 
