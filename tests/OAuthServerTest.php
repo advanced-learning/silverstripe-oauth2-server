@@ -13,9 +13,11 @@ use AdvancedLearning\Oauth2Server\Repositories\ClientRepository;
 use AdvancedLearning\Oauth2Server\Repositories\RefreshTokenRepository;
 use AdvancedLearning\Oauth2Server\Repositories\ScopeRepository;
 use AdvancedLearning\Oauth2Server\Repositories\UserRepository;
+use AdvancedLearning\Oauth2Server\Services\AuthenticationService;
 use AdvancedLearning\Oauth2Server\Services\Authenticator;
 use GuzzleHttp\Psr7\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\CryptTrait;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use Lcobucci\JWT\Claim\Factory as ClaimFactory;
@@ -41,6 +43,8 @@ use function sys_get_temp_dir;
 
 class OAuthServerTest extends SapphireTest
 {
+    use CryptTrait;
+
     protected static $fixture_file = 'OAuthFixture.yml';
 
     protected static $privateKeyFile = 'private.key';
@@ -52,9 +56,6 @@ class OAuthServerTest extends SapphireTest
      */
     public function setUp()
     {
-        // add GroupExtension for scopes
-        Config::forClass(Group::class)->merge('extensions', [GroupExtension::class]);
-
         parent::setUp();
 
         // copy private key so we can set correct permissions, file gets removed when tests finish
@@ -70,6 +71,8 @@ class OAuthServerTest extends SapphireTest
         Environment::setEnv('OAUTH_PUBLIC_KEY_PATH', $path);
 
         Security::force_database_is_ready(true);
+
+        $this->setEncryptionKey('lxZFUEsBCJ2Yb14IF2ygAHI5N4+ZAUXXaSeeJm6+twsUmIen');
     }
 
     /**
@@ -118,21 +121,19 @@ class OAuthServerTest extends SapphireTest
 
         $data = json_decode((string)$response->getBody(), true);
 
+        // decode refresh token
+        $refreshToken = json_decode($this->decrypt($data['refresh_token']), true);
+        $tokenRepo = new RefreshTokenRepository();
+
         $this->assertNotEmpty($data, 'Should have received response data');
         $this->assertArrayHasKey('token_type', $data, 'Response should have a token_type');
         $this->assertArrayHasKey('expires_in', $data, 'Response should have expire time for token');
         $this->assertArrayHasKey('access_token', $data, 'Response should have a token');
         $this->assertEquals('Bearer', $data['token_type'], 'Token type should be Bearer');
-    }
+        $this->assertNotNull($tokenRepo->findToken($refreshToken['refresh_token_id']), 'Response should have a refresh token');
 
-    public function testScopes()
-    {
-        $member = $this->objFromFixture(Member::class, 'member1');
-
-        $entity = new UserEntity($member);
-
-        $this->assertTrue($entity->hasScope('scope1'), 'Member should have scope1');
-        $this->assertFalse($entity->hasScope('scope2'), 'Member should not have scope2');
+        $tokenRepo->revokeRefreshToken($refreshToken['refresh_token_id']);
+        $this->assertTrue($tokenRepo->isRefreshTokenRevoked($refreshToken['refresh_token_id']), 'Token should be revoked');
     }
 
     public function testMiddleware()
@@ -269,6 +270,17 @@ class OAuthServerTest extends SapphireTest
     }
 
     /**
+     * @expectedException \AdvancedLearning\Oauth2Server\Exceptions\AuthenticationException
+     */
+    public function testAuthenticationException()
+    {
+        $service = new AuthenticationService();
+        $request = new HTTPRequest('GET', '/test');
+
+        $service->authenticate($request);
+    }
+
+    /**
      * Setup the Authorization Server.
      *
      * @return AuthorizationServer
@@ -282,7 +294,7 @@ class OAuthServerTest extends SapphireTest
 
         // Path to public and private keys
         $privateKey = $this->getPrivateKeyPath();
-        $encryptionKey = 'lxZFUEsBCJ2Yb14IF2ygAHI5N4+ZAUXXaSeeJm6+twsUmIen';
+        $encryptionKey = $this->encryptionKey;
 
         // Setup the authorization server
         $server = new AuthorizationServer(
