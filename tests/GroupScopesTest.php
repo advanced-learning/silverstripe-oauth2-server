@@ -19,7 +19,7 @@ use SilverStripe\Security\Member;
 
 class GroupScopesTest extends SapphireTest
 {
-    protected static $fixture_file = 'OAuthFixture.yml';
+    protected static $fixture_file = 'tests/OAuthFixture.yml';
 
     public function setUp()
     {

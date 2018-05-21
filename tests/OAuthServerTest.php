@@ -45,7 +45,7 @@ class OAuthServerTest extends SapphireTest
 {
     use CryptTrait;
 
-    protected static $fixture_file = 'OAuthFixture.yml';
+    protected static $fixture_file = 'tests/OAuthFixture.yml';
 
     protected static $privateKeyFile = 'private.key';
 

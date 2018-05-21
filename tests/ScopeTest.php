@@ -11,7 +11,7 @@ use SilverStripe\Security\Member;
 
 class ScopeTest extends SapphireTest
 {
-    protected static $fixture_file = './OauthFixture.yml';
+    protected static $fixture_file = 'tests/OauthFixture.yml';
 
     /**
      * Setup test environment.
