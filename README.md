@@ -18,7 +18,7 @@ OAuth2 server for SilverStripe 4.
 Install with [Composer](https://getcomposer.org):
 
 ```shell
-composer require advanced-learning/silverstripe-oauth-server
+composer require advanced-learning/silverstripe-oauth2-server
 ```
 
 ## Oauth Support
