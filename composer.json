@@ -16,7 +16,7 @@
         "robbie/psr7-adapters": "1.1.x-dev",
         "PHP": ">=7.1",
         "silverstripe/admin": "^1.0",
-        "silverstripe/graphql": "^1.0"
+        "silverstripe/graphql": "*"
     },
     "require-dev": {
         "phpunit/PHPUnit": "^5.7@stable",
