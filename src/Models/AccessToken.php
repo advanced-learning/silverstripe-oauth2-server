@@ -33,7 +33,7 @@ class AccessToken extends DataObject
 
     private static $summary_fields = [
         'Name',
-        'ExpireDateTime',
+        'ExpiryDateTime',
         'Revoked'
     ];
 }
