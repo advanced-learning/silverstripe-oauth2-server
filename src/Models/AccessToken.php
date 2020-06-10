@@ -36,4 +36,8 @@ class AccessToken extends DataObject
         'ExpireDateTime',
         'Revoked'
     ];
+
+    private static $indexes = [
+        'Identifier' => true,
+    ];
 }

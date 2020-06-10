@@ -4,9 +4,11 @@ namespace AdvancedLearning\Oauth2Server\Repositories;
 
 use AdvancedLearning\Oauth2Server\Entities\AccessTokenEntity as AccessTokenEntity;
 use AdvancedLearning\Oauth2Server\Models\AccessToken;
+use Carbon\Carbon;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use SilverStripe\ORM\DB;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
@@ -75,5 +77,19 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function findToken(string $tokenId): ?AccessToken
     {
         return AccessToken::get()->filter(['Identifier' => $tokenId])->first();
+    }
+
+    /**
+     * Delete tokens which have expired.
+     *
+     * @param integer $days
+     */
+    public function deleteExpiredTokens($days = 1)
+    {
+        $expiryDate = Carbon::now()->subDays($days);
+        DB::query(sprintf(
+            'DELETE FROM "OauthAccessToken" WHERE "ExpiryDateTime" < \'%s\'',
+            $expiryDate->toDateTimeString()
+        ));
     }
 }
