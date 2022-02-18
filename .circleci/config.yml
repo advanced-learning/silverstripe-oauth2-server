@@ -16,7 +16,6 @@ jobs:
           - SS_ENVIRONMENT_TYPE=dev
       - image: circleci/mysql:5.7
         environment:
-          - MYSQL_USER=root
           - MYSQL_ROOT_PASSWORD=ubuntu
           - MYSQL_DATABASE=circle_test
           - MYSQL_HOST=127.0.0.1
