@@ -32,6 +32,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+      - run: docker-php-ext-enable intl
       - run: composer validate
       - run: composer require --prefer-source --no-update silverstripe/recipe-cms
       - run: composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
