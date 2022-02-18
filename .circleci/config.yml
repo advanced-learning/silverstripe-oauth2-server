@@ -23,12 +23,6 @@ jobs:
 
     working_directory: ~/var/www
 
-    branches:
-      only:
-        - master
-        - develop
-        - /feature.*/
-
     steps:
       - checkout
 
