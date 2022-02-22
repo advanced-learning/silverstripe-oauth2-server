@@ -40,7 +40,7 @@ jobs:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.json" }}
 
-      - run: vendor/bin/sake dev/build
+      - run: php vendor/silverstripe/framework/cli-script.php dev/build
 
       # run tests!
       - run: vendor/bin/phpunit -d memory_limit=512M --coverage-clover=coverage.xml tests/
