@@ -6,7 +6,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: shippingdocker/php-composer:7.4
+      - image: itwte/ss-ci:0.0.1
         environment:
           - SS_DATABASE_CLASS=MySQLPDODatabase
           - SS_DATABASE_SERVER=127.0.0.1
@@ -31,9 +31,7 @@ jobs:
             - v1-dependencies-{{ checksum "composer.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
-      - run: docker-php-ext-install intl
-      - run: docker-php-ext-enable intl
+          
       - run: composer validate
       - run: composer require --prefer-source --no-update silverstripe/recipe-cms
       - run: composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
