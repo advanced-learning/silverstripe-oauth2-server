@@ -41,21 +41,21 @@ class AccessTokenEntity implements AccessTokenEntityInterface
     public function convertToJWT(CryptKey $privateKey)
     {
         $tokenBuilder = (new Builder())
-            ->setAudience($this->getClient()->getIdentifier())
-            ->setId($this->getIdentifier(), true)
-            ->setIssuedAt(time())
-            ->setNotBefore(time())
-            ->setExpiration($this->getExpiryDateTime()->getTimestamp())
-            ->setSubject($this->getUserIdentifier())
-            ->set('scopes', $this->getScopes());
+            ->permittedFor($this->getClient()->getIdentifier())
+            ->identifiedBy($this->getIdentifier())
+            ->issuedAt(time())
+            ->canOnlyBeUsedAfter(time())
+            ->expiresAt($this->getExpiryDateTime()->getTimestamp())
+            ->relatedTo($this->getUserIdentifier())
+            ->withClaim('scopes', $this->getScopes());
 
         // add user name to claims
         if ($this->getUserIdentifier()) {
             $userEntity = $this->getUserEntity();
             $member = $userEntity->getMember();
 
-            $tokenBuilder->set('fn', $member ? $member->FirstName : null)
-                ->set('ln', $member ? $member->Surname : null);
+            $tokenBuilder->withClaim('fn', $member ? $member->FirstName : null)
+                ->withClaim('ln', $member ? $member->Surname : null);
         }
 
         return $tokenBuilder->sign(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()))

@@ -31,7 +31,7 @@ jobs:
             - v1-dependencies-{{ checksum "composer.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-          
+
       - run: composer validate
       - run: composer require --prefer-source --no-update silverstripe/recipe-cms
       - run: composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
