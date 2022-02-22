@@ -28,5 +28,8 @@
             "AdvancedLearning\\Oauth2Server\\": "src",
             "AdvancedLearning\\Oauth2Server\\Tests\\": "tests"
         }
+    },
+    "config": {
+        "allow-plugins": true
     }
 }
