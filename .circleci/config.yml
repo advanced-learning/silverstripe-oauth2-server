@@ -6,7 +6,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: shippingdocker/php-composer:7.4
+      - image: brettt89/silverstripe-web:7.4
         environment:
           - SS_DATABASE_CLASS=MySQLPDODatabase
           - SS_DATABASE_SERVER=127.0.0.1
