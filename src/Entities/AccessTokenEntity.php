@@ -3,6 +3,7 @@
 namespace AdvancedLearning\Oauth2Server\Entities;
 
 use AdvancedLearning\Oauth2Server\Repositories\UserRepository;
+use DateTimeImmutable;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
@@ -40,12 +41,14 @@ class AccessTokenEntity implements AccessTokenEntityInterface
      */
     public function convertToJWT(CryptKey $privateKey)
     {
+        $now = new DateTimeImmutable();
+
         $tokenBuilder = (new Builder())
             ->permittedFor($this->getClient()->getIdentifier())
             ->identifiedBy($this->getIdentifier())
-            ->issuedAt(time())
-            ->canOnlyBeUsedAfter(time())
-            ->expiresAt($this->getExpiryDateTime()->getTimestamp())
+            ->issuedAt($now)
+            ->canOnlyBeUsedAfter($now)
+            ->expiresAt(DateTimeImmutable::createFromMutable($this->getExpiryDateTime()))
             ->relatedTo($this->getUserIdentifier())
             ->withClaim('scopes', $this->getScopes());
 
@@ -58,8 +61,7 @@ class AccessTokenEntity implements AccessTokenEntityInterface
                 ->withClaim('ln', $member ? $member->Surname : null);
         }
 
-        return $tokenBuilder->sign(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()))
-            ->getToken();
+        return $tokenBuilder->getToken(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()));
     }
 
     protected function getUserEntity()

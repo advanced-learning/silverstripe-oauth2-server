@@ -1,4 +1,6 @@
+.env
 assets/
+silverstripe-cache/
 vendor/
 resources/
 .idea/

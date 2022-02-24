@@ -1,11 +1,10 @@
 <?php
 
-namespace AdvancedLearning\Oauth2Server\Tests;
+namespace AdvancedLearning\Tests\Oauth2Server;
 
 use AdvancedLearning\Oauth2Server\AuthorizationServer\DefaultGenerator;
 use AdvancedLearning\Oauth2Server\Controllers\AuthoriseController;
 use AdvancedLearning\Oauth2Server\Entities\UserEntity;
-use AdvancedLearning\Oauth2Server\Extensions\GroupExtension;
 use AdvancedLearning\Oauth2Server\Middleware\AuthenticationMiddleware;
 use AdvancedLearning\Oauth2Server\Models\Client;
 use AdvancedLearning\Oauth2Server\Repositories\AccessTokenRepository;
@@ -15,28 +14,25 @@ use AdvancedLearning\Oauth2Server\Repositories\ScopeRepository;
 use AdvancedLearning\Oauth2Server\Repositories\UserRepository;
 use AdvancedLearning\Oauth2Server\Services\AuthenticationService;
 use AdvancedLearning\Oauth2Server\Services\Authenticator;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
+use Lcobucci\JWT\Parser;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptTrait;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
-use Lcobucci\JWT\Claim\Factory as ClaimFactory;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Parsing\Encoder;
-use GuzzleHttp\Psr7\Response;
 use Robbie\Psr7\HttpRequestAdapter;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
-use SilverStripe\Core\Tests\Startup\ErrorControlChainMiddlewareTest\BlankKernel;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\Group;
+use SilverStripe\Dev\TestKernel;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+
 use function file_get_contents;
 use function file_put_contents;
 use function sys_get_temp_dir;
@@ -153,7 +149,7 @@ class OAuthServerTest extends SapphireTest
         $_SERVER['SERVER_PORT'] = 443;
 
         // Mock app
-        $app = new HTTPApplication(new BlankKernel(BASE_PATH));
+        $app = new HTTPApplication(new TestKernel(BASE_PATH));
         $app->getKernel()->setEnvironment(Kernel::LIVE);
 
         $result = (new AuthenticationMiddleware($app))->process($request, function () {
