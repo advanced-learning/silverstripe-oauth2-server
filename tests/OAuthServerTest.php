@@ -1,6 +1,6 @@
 <?php
 
-namespace AdvancedLearning\Tests\Oauth2Server;
+namespace AdvancedLearning\Oauth2Server\Tests;
 
 use AdvancedLearning\Oauth2Server\AuthorizationServer\DefaultGenerator;
 use AdvancedLearning\Oauth2Server\Controllers\AuthoriseController;
