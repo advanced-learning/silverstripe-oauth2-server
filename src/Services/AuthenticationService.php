@@ -6,6 +6,8 @@ namespace AdvancedLearning\Oauth2Server\Services;
 use AdvancedLearning\Oauth2Server\Exceptions\AuthenticationException;
 use AdvancedLearning\Oauth2Server\Repositories\AccessTokenRepository;
 use GuzzleHttp\Psr7\Response;
+use Lcobucci\JWT\Signer\Key;
+use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer;
 use Robbie\Psr7\HttpRequestAdapter;
@@ -114,11 +116,12 @@ class AuthenticationService implements Authenticator
 
         // Relative paths to the web root
         $publicKeyPath = str_replace('{BASE_DIR}', Director::baseFolder(), $publicKeyPath);
+        $publicKey = new CryptKey($publicKeyPath);
 
         // Setup the authorization server
         return new ResourceServer(
             $accessTokenRepository,
-            $publicKeyPath
+            $publicKey
         );
     }
 

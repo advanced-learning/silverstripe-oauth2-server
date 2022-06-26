@@ -25,11 +25,11 @@ use Robbie\Psr7\HttpRequestAdapter;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\CoreKernel;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestKernel;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 
@@ -149,7 +149,7 @@ class OAuthServerTest extends SapphireTest
         $_SERVER['SERVER_PORT'] = 443;
 
         // Mock app
-        $app = new HTTPApplication(new TestKernel(BASE_PATH));
+        $app = new HTTPApplication(new CoreKernel(BASE_PATH));
         $app->getKernel()->setEnvironment(Kernel::LIVE);
 
         $result = (new AuthenticationMiddleware($app))->process($request, function () {
