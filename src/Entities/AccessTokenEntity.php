@@ -2,6 +2,7 @@
 
 namespace AdvancedLearning\Oauth2Server\Entities;
 
+use AdvancedLearning\Oauth2Server\Repositories\ClientRepository;
 use AdvancedLearning\Oauth2Server\Repositories\UserRepository;
 use DateTimeImmutable;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -9,6 +10,7 @@ use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Builder;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\UnencryptedToken;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
@@ -38,11 +40,9 @@ class AccessTokenEntity implements AccessTokenEntityInterface
     /**
      * Generate a JWT from the access token
      *
-     * @param CryptKey $privateKey
-     *
-     * @return UnencryptedToken
+     * @return Plain
      */
-    public function convertToJWT(CryptKey $privateKey)
+    public function convertToJWT()
     {
         $now = new DateTimeImmutable();
 
@@ -52,11 +52,11 @@ class AccessTokenEntity implements AccessTokenEntityInterface
             ->issuedAt($now)
             ->canOnlyBeUsedAfter($now)
             ->expiresAt($this->getExpiryDateTime())
-            ->relatedTo($this->getUserIdentifier())
             ->withClaim('scopes', $this->getScopes());
 
         // add user name to claims
         if ($this->getUserIdentifier()) {
+            $tokenBuilder->relatedTo($this->getUserIdentifier());
             $userEntity = $this->getUserEntity();
             $member = $userEntity->getMember();
 
@@ -64,11 +64,13 @@ class AccessTokenEntity implements AccessTokenEntityInterface
                 ->withClaim('ln', $member ? $member->Surname : null);
         }
 
-        return $tokenBuilder->getToken(new Sha256(), InMemory::file($privateKey->getKeyPath(), $privateKey->getPassPhrase()));
+        return $tokenBuilder->getToken(new Sha256(), InMemory::file($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase() ?? ''));
     }
 
     protected function getUserEntity()
     {
-        return (new UserRepository())->getUserEntityByIdentifier($this->getUserIdentifier());
+        return $this->getUserIdentifier()
+            ? (new UserRepository())->getUserEntityByIdentifier($this->getUserIdentifier())
+            : null;
     }
 }
