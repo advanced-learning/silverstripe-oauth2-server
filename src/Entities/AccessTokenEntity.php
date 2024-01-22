@@ -4,9 +4,12 @@ namespace AdvancedLearning\Oauth2Server\Entities;
 
 use AdvancedLearning\Oauth2Server\Repositories\UserRepository;
 use DateTimeImmutable;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Builder;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\UnencryptedToken;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
@@ -37,18 +40,18 @@ class AccessTokenEntity implements AccessTokenEntityInterface
      *
      * @param CryptKey $privateKey
      *
-     * @return string
+     * @return UnencryptedToken
      */
     public function convertToJWT(CryptKey $privateKey)
     {
         $now = new DateTimeImmutable();
 
-        $tokenBuilder = (new Builder())
+        $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::default()))
             ->permittedFor($this->getClient()->getIdentifier())
             ->identifiedBy($this->getIdentifier())
             ->issuedAt($now)
             ->canOnlyBeUsedAfter($now)
-            ->expiresAt(DateTimeImmutable::createFromMutable($this->getExpiryDateTime()))
+            ->expiresAt($this->getExpiryDateTime())
             ->relatedTo($this->getUserIdentifier())
             ->withClaim('scopes', $this->getScopes());
 
@@ -61,7 +64,7 @@ class AccessTokenEntity implements AccessTokenEntityInterface
                 ->withClaim('ln', $member ? $member->Surname : null);
         }
 
-        return $tokenBuilder->getToken(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()));
+        return $tokenBuilder->getToken(new Sha256(), InMemory::file($privateKey->getKeyPath(), $privateKey->getPassPhrase()));
     }
 
     protected function getUserEntity()
