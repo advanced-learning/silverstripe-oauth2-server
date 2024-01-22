@@ -44,9 +44,11 @@ class AccessTokenEntity implements AccessTokenEntityInterface
      */
     public function convertToJWT()
     {
+        $this->initJwtConfiguration();
+
         $now = new DateTimeImmutable();
 
-        $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::default()))
+        $tokenBuilder = $this->jwtConfiguration->builder()
             ->permittedFor($this->getClient()->getIdentifier())
             ->identifiedBy($this->getIdentifier())
             ->issuedAt($now)
@@ -64,7 +66,7 @@ class AccessTokenEntity implements AccessTokenEntityInterface
                 ->withClaim('ln', $member ? $member->Surname : null);
         }
 
-        return $tokenBuilder->getToken(new Sha256(), InMemory::file($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase() ?? ''));
+        return $tokenBuilder->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }
 
     protected function getUserEntity()
